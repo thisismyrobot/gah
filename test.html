@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Embed API Demo</title>
+        <script type="text/javascript" src="config.js"></script>
+        <script type="text/javascript">
+            (function(w,d,s,g,js,fjs){
+              g=w.gapi||(w.gapi={});g.analytics={q:[],ready:function(cb){this.q.push(cb)}};
+              js=d.createElement(s);fjs=d.getElementsByTagName(s)[0];
+              js.src='https://apis.google.com/js/platform.js';
+              fjs.parentNode.insertBefore(js,fjs);js.onload=function(){g.load('analytics')};
+            }(window,document,'script'));
+        </script>
+        <script type="text/javascript">
+            gapi.analytics.ready(function() {
+
+                gapi.analytics.auth.authorize({
+                    container: 'auth-button',
+                    clientid: CLIENT_ID,
+                });
+
+                gapi.analytics.auth.on('success', function(response) {
+
+                    var report = new gapi.analytics.report.Data({
+                        'query': {
+                            'ids': 'ga:' + VIEW_ID,
+                            'metrics': 'ga:uniquePageViews',
+                            'dimensions': 'ga:pagePath,ga:year,ga:month,ga:day,ga:hour,ga:minute',
+                            'filters': 'ga:pagePath==' + TARGET,
+                            'start-date': '7daysAgo',
+                            'end-date': '0daysAgo',
+                            'samplingLevel': 'HIGHER_PRECISION',
+                        }
+                    });
+
+                    var hits = 0;
+                    report.on('success', function(response) {
+                        var now = new Date();
+                        response.rows.forEach(function(row) {
+
+                            if (parseInt(row[2]) !== now.getMonth() + 1) {
+                                return;
+                            }
+
+                            if (parseInt(row[3]) !== now.getDate()) {
+                                return;
+                            }
+
+                            hits++;
+                        });
+                        console.log(hits);
+                    });
+
+                    report.execute();
+
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <section id="auth-button"></section>
+    </body>
+</html>
