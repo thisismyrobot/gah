@@ -7,6 +7,8 @@
         <script type="text/javascript" src="config.js"></script>
         <script type="text/javascript">
 
+            // All-caps config variables in config.js
+
             function update() {
               client.check(VIEW_ID, TARGET)
                 .on('success', function(e) {
@@ -14,7 +16,6 @@
                 });
             }
 
-            // config variables in config.js
             client
               .setup(CLIENT_ID)
               .on('success', function() {

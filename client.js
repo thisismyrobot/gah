@@ -46,7 +46,10 @@ var client = (function() {
             'samplingLevel': 'HIGHER_PRECISION',
           }
         }).on('success', function(response) {
-          var count = parseInt(response.rows[0][2], 10);
+          var count = 0;
+          if (response.totalResults > 0) {
+            count = parseInt(response.rows[0][2], 10);
+          }
           var payload = {'detail': {'count': count}};
           eventTarget.dispatchEvent(new CustomEvent('success', payload));
         }).execute();
