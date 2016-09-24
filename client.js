@@ -1,7 +1,7 @@
 window.client = (function () {
   return {
     setup: function (clientId) {
-      var eventTarget = document.createElement('div');
+      var eventTarget = document.createElement('div')
 
       window.gapi.analytics.ready(function () {
         window.gapi.analytics.auth.authorize({
