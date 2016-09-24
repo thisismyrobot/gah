@@ -19,6 +19,7 @@ var client = (function() {
           clientid: clientId,
         });
         gapi.analytics.auth.on('success', function(response) {
+          document.getElementById('auth-button').outerHTML = '';
           eventTarget.dispatchEvent(new Event('success'));
         });
       });
