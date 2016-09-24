@@ -8,3 +8,8 @@ unique hit on a path.
 # Setup
 
 You'll need to configure config.js, see the links in there for help.
+
+## Why does the JavaScript look a bit wierd?
+
+I'm having a play with the
+[standardjs style guide](http://standardjs.com/rules.html).
