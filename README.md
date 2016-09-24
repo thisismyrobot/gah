@@ -1,8 +1,10 @@
-# Hit counter example
+# GAH
+
+(Google Analyiccs Hit counter)
 
 Experimenting with Google's Analytics API, using their JavaScript client.
 
-Currently it's just an example of making a bell sound everytime there is a
+Consider this a worked example of making a bell sound everytime there is a
 unique hit on a path.
 
 ## Setup
