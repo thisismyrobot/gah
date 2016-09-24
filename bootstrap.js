@@ -1,4 +1,5 @@
 // Bring in the API client.
+// From https://developers.google.com/analytics/devguides/reporting/embed/v1/getting-started#step-2
 (function(w,d,s,g,js,fjs){
     g=w.gapi||(w.gapi={});g.analytics={q:[],ready:function(cb){this.q.push(cb)}};
     js=d.createElement(s);fjs=d.getElementsByTagName(s)[0];
