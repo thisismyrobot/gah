@@ -6,7 +6,8 @@
 // have configured.
 var VIEW_ID = '';
 
-// OAuth Client ID - 
+// OAuth Client ID - instructions here:
+// https://developers.google.com/analytics/devguides/reporting/embed/v1/getting-started
 var CLIENT_ID = '';
 
 // Target is the path you are interested in.
