@@ -1,7 +1,10 @@
-Experimenting with Google's Analytics API, in JavaScript.
+# Hit counter example
+
+Experimenting with Google's Analytics API, using their JavaScript client.
+
+Currently it's just an example of making a bell sound everytime there is a
+unique hit on a path.
 
 # Setup
 
-Do the initial setup - you want an OAuth 2.0 credential/client ID:
-
-    https://developers.google.com/analytics/devguides/reporting/embed/v1/getting-started
+You'll need to configure config.js, see the links in there for help.
