@@ -9,6 +9,8 @@ unique hit on a path.
 
 You'll need to configure config.js, see the links in there for help.
 
+Then open test.html.
+
 ## Why does the JavaScript look a bit wierd?
 
 I'm having a play with the
