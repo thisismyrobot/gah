@@ -22,6 +22,7 @@ window.Gah = function (clientId, viewId, target) {
   var _target = target
 
   var _eventTarget = document.createElement('div')
+  var _setup = false
 
   var _hideAuthButton = function () {
     var button = document.getElementById('auth-button')
@@ -38,12 +39,17 @@ window.Gah = function (clientId, viewId, target) {
       })
       window.gapi.analytics.auth.on('success', function (response) {
         _hideAuthButton()
+        _setup = true
         _eventTarget.dispatchEvent(new window.Event('ready'))
       })
     })
   }
 
   var check = function () {
+    if (_setup !== true) {
+      console.log('ERROR: Must call setup() before check()')
+      return
+    }
     new window.gapi.analytics.report.Data({
       'query': {
         'ids': 'ga:' + _viewId,
@@ -71,7 +77,7 @@ window.Gah = function (clientId, viewId, target) {
       }, false)
       return
     }
-    console.log('Unknown event "' + evt + '", must be "ready" or "checked"')
+    console.log('ERROR: Unknown event "' + evt + '", must be "ready" or "checked"')
   }
 
   return {
