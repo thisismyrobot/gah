@@ -2,10 +2,25 @@
 <html>
   <head>
     <title>Example application of the hit counter</title>
-    <script type="text/javascript" src="analytics_api.js"></script>
+
+    <script type="text/javascript">
+      // Bring in the API client.
+      // From https://developers.google.com/analytics/devguides/reporting/embed/v1/getting-started#step-2
+      (function(w,d,s,g,js,fjs){
+        g=w.gapi||(w.gapi={});g.analytics={q:[],ready:function(cb){this.q.push(cb)}};
+        js=d.createElement(s);fjs=d.getElementsByTagName(s)[0];
+        js.src='https://apis.google.com/js/platform.js';
+        fjs.parentNode.insertBefore(js,fjs);js.onload=function(){g.load('analytics')};
+      }(window,document,'script'));
+    </script>
+
+    <!-- The gah library itself -->
     <script type="text/javascript" src="gah.min.js"></script>
 
+    <!-- Configuration -->
     <script type="text/javascript" src="config.js"></script>
+
+    <!-- Bringing it all together -->
     <script type="text/javascript">
       /* globals gah, VIEW_ID, TARGET, CLIENT_ID */
       /* VIEW_ID, TARGET, CLIENT_ID defined in config.js */
