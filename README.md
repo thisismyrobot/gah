@@ -11,7 +11,7 @@ unique hit on a path.
 
 You'll need to configure config.js, see the links in there for help.
 
-Then open test.html.
+Then open example.html.
 
 ## Why does the JavaScript look a bit weird?
 
