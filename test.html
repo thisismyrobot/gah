@@ -35,8 +35,7 @@
         client.check()
       }
 
-      gah.authenticate(CLIENT_ID)
-      gah.on('authenticated', function () {
+      gah.authenticate(CLIENT_ID, function () {
         var client = gah.newClient(VIEW_ID, TARGET)
         startChecker(client)
       })
