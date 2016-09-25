@@ -39,10 +39,6 @@
       gah.on('authenticated', function () {
         var client = gah.newClient(VIEW_ID, TARGET)
         startChecker(client)
-
-        var client2 = gah.newClient(VIEW_ID, '/error/2')
-        client2.on('checked', function (e) { console.log(e.detail.count) })
-        client2.check()
       })
 
     </script>
