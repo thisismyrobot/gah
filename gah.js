@@ -2,27 +2,29 @@
 
   Usage:
 
-    var client = new Gah(oathClientId, analyticsViewId, targetPath)
+    gah.authenticate(oathClientId)
 
-    client.on('checked', function (e) {
-      alert('Count: ' + e.detail.count)
-    })
+    gah.on('authenticated', function () {
+      var client1 = gah.newClient(analyticsViewId1, targetPath1)
+      client1.on('checked', function (e) {
+        alert('Count check 1: ' + e.detail.count)
+      })
 
-    client.setup()
-    client.on('ready', function () {
-      client.check()
+      var client2 = gah.newClient(analyticsViewId2, targetPath2)
+      client2.on('checked', function (e) {
+        alert('Count check 2: ' + e.detail.count)
+      })
+
+      client1.check()
+      client2.check()
     })
 
 */
-window.Gah = function (clientId, viewId, target) {
+window.gah = (function () {
   'use strict'
 
-  var _clientId = clientId
-  var _viewId = viewId
-  var _target = target
-
+  var _authenticated = false
   var _eventTarget = document.createElement('div')
-  var _setup = false
 
   var _hideAuthButton = function () {
     var button = document.getElementById('auth-button')
@@ -31,58 +33,80 @@ window.Gah = function (clientId, viewId, target) {
     }
   }
 
-  var setup = function () {
+  var authenticate = function (clientId) {
     window.gapi.analytics.ready(function () {
       window.gapi.analytics.auth.authorize({
         container: 'auth-button',
-        clientid: _clientId
+        clientid: clientId
       })
       window.gapi.analytics.auth.on('success', function (response) {
         _hideAuthButton()
-        _setup = true
-        _eventTarget.dispatchEvent(new window.Event('ready'))
+        _authenticated = true
+        _eventTarget.dispatchEvent(new window.Event('authenticated'))
       })
     })
   }
 
-  var check = function () {
-    if (_setup !== true) {
-      console.log('ERROR: Must call setup() before check()')
-      return
+  var newClient = function (viewId, target) {
+    var _eventTarget = document.createElement('div')
+    var check = function () {
+      if (_authenticated !== true) {
+        console.log('ERROR: Must call setup() before check()')
+        return
+      }
+      new window.gapi.analytics.report.Data({
+        'query': {
+          'ids': 'ga:' + viewId,
+          'metrics': 'ga:uniquePageViews',
+          'dimensions': 'ga:pagePath,ga:day',
+          'filters': 'ga:pagePath==' + target,
+          'start-date': '0daysAgo',
+          'end-date': '0daysAgo',
+          'samplingLevel': 'HIGHER_PRECISION'
+        }
+      }).on('success', function (response) {
+        var count = 0
+        if (response.totalResults > 0) {
+          count = parseInt(response.rows[0][2], 10)
+        }
+        var payload = {'detail': {'count': count}}
+        _eventTarget.dispatchEvent(new window.CustomEvent('checked', payload))
+      }).execute()
     }
-    new window.gapi.analytics.report.Data({
-      'query': {
-        'ids': 'ga:' + _viewId,
-        'metrics': 'ga:uniquePageViews',
-        'dimensions': 'ga:pagePath,ga:day',
-        'filters': 'ga:pagePath==' + _target,
-        'start-date': '0daysAgo',
-        'end-date': '0daysAgo',
-        'samplingLevel': 'HIGHER_PRECISION'
+
+    var on = function (evt, handler) {
+      if (evt === 'checked') {
+        _eventTarget.addEventListener(evt, function (e) {
+          handler(e)
+        }, false)
+        return
       }
-    }).on('success', function (response) {
-      var count = 0
-      if (response.totalResults > 0) {
-        count = parseInt(response.rows[0][2], 10)
+      console.log('ERROR: Unknown event "' + evt + '", must be "checked"')
+    }
+
+    var client = (function () {
+      return {
+        on: on,
+        check: check
       }
-      var payload = {'detail': {'count': count}}
-      _eventTarget.dispatchEvent(new window.CustomEvent('checked', payload))
-    }).execute()
+    }())
+
+    return client
   }
 
   var on = function (evt, handler) {
-    if (evt === 'checked' || evt === 'ready') {
+    if (evt === 'authenticated') {
       _eventTarget.addEventListener(evt, function (e) {
         handler(e)
       }, false)
       return
     }
-    console.log('ERROR: Unknown event "' + evt + '", must be "ready" or "checked"')
+    console.log('ERROR: Unknown event "' + evt + '", must be "authenticated"')
   }
 
   return {
     on: on,
-    setup: setup,
-    check: check
+    authenticate: authenticate,
+    newClient: newClient
   }
-}
+}())

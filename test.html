@@ -7,7 +7,7 @@
 
     <script type="text/javascript" src="config.js"></script>
     <script type="text/javascript">
-      /* globals Gah, VIEW_ID, TARGET, CLIENT_ID */
+      /* globals gah, VIEW_ID, TARGET, CLIENT_ID */
       /* All defined in config.js */
       var currentCount = 0
 
@@ -35,10 +35,14 @@
         client.check()
       }
 
-      var client = new Gah(CLIENT_ID, VIEW_ID, TARGET)
-      client.setup()
-      client.on('ready', function () {
+      gah.authenticate(CLIENT_ID)
+      gah.on('authenticated', function () {
+        var client = gah.newClient(VIEW_ID, TARGET)
         startChecker(client)
+
+        var client2 = gah.newClient(VIEW_ID, '/error/2')
+        client2.on('checked', function (e) { console.log(e.detail.count) })
+        client2.check()
       })
 
     </script>
